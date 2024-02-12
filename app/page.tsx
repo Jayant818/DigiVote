@@ -1,6 +1,10 @@
 import Navbar from "@/components/shared/Navbar";
-import Image from "next/image";
+import SendSMS from "@/components/shared/SendSMS";
 
 export default function Home() {
-	return <Navbar />;
+	return (
+		<>
+			<Navbar />
+		</>
+	);
 }
