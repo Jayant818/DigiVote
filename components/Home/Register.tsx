@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import {
 	Dialog,
+	DialogClose,
 	DialogContent,
 	DialogDescription,
 	DialogFooter,
@@ -117,9 +118,11 @@ const Register = () => {
 						</div>
 					</div>
 					<DialogFooter>
-						<Button type="submit" onClick={handleSubmit}>
-							Register
-						</Button>
+						<DialogClose asChild>
+							<Button type="submit" onClick={handleSubmit}>
+								Register
+							</Button>
+						</DialogClose>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>

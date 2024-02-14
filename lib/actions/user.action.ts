@@ -48,11 +48,18 @@ export async function ValidateUser(userData: validateUserParams) {
 	}
 }
 
-// export async function getUserData(aadharNo:string){
-// 	try{
-// 		connectToDB();
-// 		const user = await User.findOne({})
-// 	}catch(err){
+export async function getUserData(VoterId: string) {
+	try {
+		connectToDB();
+		const user = await User.findOne({
+			voterId: VoterId,
+		});
+		if (user) {
+			return user;
+		}
 
-// 	}
-// }
+		return false;
+	} catch (err) {
+		return console.log("Error aa gaya bhai 😔 ", err);
+	}
+}
