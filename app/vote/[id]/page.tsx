@@ -1,59 +1,78 @@
+"use client";
+import Navbar from "@/components/shared/Navbar";
 import { Button } from "@/components/ui/button";
 import { getUserData } from "@/lib/actions/user.action";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { MetaMaskInpageProvider } from "@metamask/providers";
+import { ethers } from "ethers";
+import { abi, address, getContract } from "@/components/shared/contract";
+import Vote from "@/components/Vote/Vote";
 
-const page = async (params) => {
+declare global {
+	interface Window {
+		ethereum?: MetaMaskInpageProvider;
+	}
+}
+
+//@ts-ignore
+
+export const Page = (params: any) => {
+	const [contract, setContract] = useState(null);
+	const [isConnected, setIsConnected] = useState(false);
 	const id = params.params.id;
+
+	useEffect(() => {
+		async function checkConnection() {
+			const accounts = await window?.ethereum?.request({
+				method: "eth_requestAccounts",
+			});
+			if (Array.isArray(accounts) && accounts.length > 0) {
+				handleInit();
+			} else {
+				setIsConnected(false);
+			}
+		}
+	}, []);
+
+	const handleInit = async () => {
+		setIsConnected(true);
+		const { contract, signer } = await getContract();
+		setContract(contract);
+	};
+
+	const connectCallBack = async () => {
+		const { contract, signer } = await getContract();
+
+		setContract(contract);
+		if (contract) {
+			console.log("Contract", contract);
+			setIsConnected(true);
+		}
+	};
+
 	// console.log(params.params.id);
 	// console.log("Type of id ", typeof id);
 	// console.log(id);
-	const user = await getUserData(id);
-	if (!user) {
-		return <div>User not found</div>;
-	}
+	// const user = await getUserData(id);
+	const user = null;
+	// if (!user) {
+	// 	return <div>User not found</div>;
+	// }
 	return (
-		<div className="p-4">
-			<div className="bg-[#a1978d] border-2 flex  items-center flex-col w-[350px] rounded-md space-y-2 py-6">
-				<Image alt="3 lion" src="/lion.png" width={30} height={30} />
-				<h3 className="uppercase">Election Commission of India</h3>
-				<h3 className="uppercase">IdentitY card</h3>
-				<div className="flex gap-10 items-center">
-					<div className="bg-[#727272] rounded-full w-20 h-20"></div>
-					<Image
-						src={`data:image/png;base64,${user.img}`}
-						alt="user image"
-						width={200}
-						height={300}
-					/>
-				</div>
-				<div className="flex justify between gap-28">
-					<p>Elector's Name</p>
-					<p>{user.name}</p>
-				</div>
-				<div className="flex justify between gap-20">
-					<p>Aadhar Number</p>
-					<p>{user.aadharNo}</p>
-				</div>
-				<div className="flex justify between gap-28">
-					<p>Voter Id</p>
-					<p className="pl-4">{user.voterId}</p>
-				</div>
-
-				{/* <div>{user.mobileNo}</div> */}
-				{/* <div>{user.img}</div> */}
-
-				{/* <div>{user.hasVoted}</div> */}
-				{user.hasVoted ? (
-					<Button variant="destructive" disabled>
-						Already Voted
-					</Button>
-				) : (
-					<Button className="">Vote Now</Button>
-				)}
-			</div>
-		</div>
+		<>
+			<Navbar
+				isValidUser={true}
+				connect={connectCallBack}
+				connected={isConnected}
+			/>
+			<Vote
+				connected={isConnected}
+				connectCallBack={connectCallBack}
+				contract={contract}
+			/>
+		</>
 	);
 };
 
-export default page;
+export default Page;
