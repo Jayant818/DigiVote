@@ -113,6 +113,7 @@ export const Page = (params: any) => {
 				const newData = await data.json();
 				newVote.description = newData.description;
 				newVote.options = newData.options;
+				newVote.images = newData.images;
 				newVotes.push(newVote);
 			} catch (e) {
 				console.error(e);

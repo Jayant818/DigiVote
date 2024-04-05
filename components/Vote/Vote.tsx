@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import Image from "next/image";
 
 interface VoteParams {
 	connected: boolean;
@@ -38,16 +39,29 @@ const Vote = ({ connected, connectCallBack, contract, votes }: VoteParams) => {
 					{votes.length === 0 ? (
 						<h3>No votes available</h3>
 					) : (
-						<>
+						<div className=" flex  flex-col px-10  py-10 gap-4  border-2 rounded-md mt-10 ">
 							{votes.map((vote, idx) => (
-								<div key={Math.random() + idx}>
-									<h3>{vote.description}</h3>
-									<p>
+								<div key={Math.random() + idx} className="space-y-4">
+									<h3 className="text-3xl font-bold text-white ">
+										{vote.description}
+									</h3>
+									<p className="space-y-3 mt-4">
 										{vote.options.map((option, idx) => (
-											<div key={Math.random() + idx}>
-												<p>
-													{option} - {vote.Votes[idx]}
-												</p>
+											<div
+												key={Math.random() + idx}
+												className="flex gap-4 w-[40%] justify-between"
+											>
+												<div className="flex gap-4 items-center">
+													{vote.images && (
+														<Image
+															alt={option}
+															src={vote.images[option]}
+															width={50}
+															height={50}
+														/>
+													)}
+													<p className="text-white">{option}</p>
+												</div>
 												<Button
 													onClick={() => {
 														VoteNow(vote.id, idx);
@@ -60,7 +74,7 @@ const Vote = ({ connected, connectCallBack, contract, votes }: VoteParams) => {
 									</p>
 								</div>
 							))}
-						</>
+						</div>
 					)}
 				</>
 			)}
