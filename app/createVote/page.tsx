@@ -41,23 +41,26 @@ const CreateVote = () => {
 
 	const handleCreateVote = async (e) => {
 		e.preventDefault();
-		// ... (rest of your code for collecting form data)
+
+		// Validate input fields
+		if (!ipfsUrl || !numOptions || !endDate) {
+			alert("Please fill in all required fields.");
+			return;
+		}
 
 		try {
 			const { contract } = await getContract();
-			console.log("Contract value is this ", contract);
-
 			if (!contract) {
 				throw new Error("Failed to connect to contract. Please try again.");
 			}
 
-			await contract.createVote(
-				ipfsUrl,
-				numOptions,
-				new Date(endDate).getTime()
-			);
+			const endDateTime = new Date(endDate).getTime();
+			const data = await contract.createVote(ipfsUrl, numOptions, endDateTime);
+
+			console.log("Vote creation data:", data);
 			alert("Vote Created Successfully");
 		} catch (error) {
+			console.error("Error creating vote:", error);
 			alert("Error Creating Vote: " + error.message);
 		}
 	};

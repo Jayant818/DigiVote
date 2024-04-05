@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 
-export const address = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+export const address = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
 export const abi = [
 	{
 		anonymous: false,
@@ -67,29 +67,6 @@ export const abi = [
 	{
 		inputs: [
 			{
-				internalType: "string",
-				name: "uri",
-				type: "string",
-			},
-			{
-				internalType: "uint256",
-				name: "options",
-				type: "uint256",
-			},
-			{
-				internalType: "uint256",
-				name: "endTime",
-				type: "uint256",
-			},
-		],
-		name: "createVote",
-		outputs: [],
-		stateMutability: "nonpayable",
-		type: "function",
-	},
-	{
-		inputs: [
-			{
 				internalType: "uint256",
 				name: "voteId",
 				type: "uint256",
@@ -148,6 +125,29 @@ export const abi = [
 	{
 		inputs: [
 			{
+				internalType: "string",
+				name: "uri",
+				type: "string",
+			},
+			{
+				internalType: "uint256",
+				name: "options",
+				type: "uint256",
+			},
+			{
+				internalType: "uint256",
+				name: "endTime",
+				type: "uint256",
+			},
+		],
+		name: "createVote",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{
 				internalType: "uint256",
 				name: "voteId",
 				type: "uint256",
@@ -185,38 +185,3 @@ export const getContract = async () => {
 	const contract = new ethers.Contract(address, abi, signer);
 	return { contract, signer };
 };
-
-// export const getContract = async () => {
-// 	const signer = provider?.getSigner();
-// 	//@ts-ignore
-// 	const contract = new ethers.Contract(address, abi, signer);
-// 	return { contract, signer };
-// };
-
-// connect to metamask through browsser using ethers.js
-// export const connectToMetaMask = async () => {
-// 	try {
-// 		// Check if Web3 is injected by MetaMask
-// 		if (typeof window.ethereum !== "undefined") {
-// 			// Request access to the user's MetaMask account
-// 			await window.ethereum.request({ method: "eth_requestAccounts" });
-
-// 			// Create a new Web3 instance
-// 			const web3 = new ethers.providers.Web3Provider(window.ethereum);
-
-// 			// Check if the user is connected to the desired network
-// 			const networkId = await web3.getNetwork();
-// 			// if (networkId !== /* your desired network ID */) {
-// 			//   alert('Please switch to the desired network');
-// 			//   return;
-// 			// }
-
-// 			console.log("MetaMask connected successfully");
-// 			return web3;
-// 		} else {
-// 			alert("Please install MetaMask to connect");
-// 		}
-// 	} catch (error) {
-// 		console.error("Error connecting to MetaMask:", error);
-// 	}
-// };
