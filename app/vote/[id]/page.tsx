@@ -69,28 +69,6 @@ export const Page = (params: any) => {
 		for (const vote of Votes) {
 			console.log("Vote", vote);
 			console.log("Vote", vote.args);
-
-			// const voteCreatedEventInterface = new ethers.utils.Interface([
-			// 	"event VoteCreated(address indexed owner, uint256 indexed createdAt, uint256 indexed voteId, uint256 endTime)",
-			// ]);
-
-			// // Decode the event arguments
-			// const decodedArgs = voteCreatedEventInterface.decodeEventLog(
-			// 	"VoteCreated",
-			// 	vote.args,
-			// 	[
-			// 		"0xBcd4042DE499D14e55001CcbB24a551F3b954096", // owner address
-			// 		ethers.BigNumber.from("1712341842"), // createdAt timestamp
-			// 		ethers.BigNumber.from("0"), // voteId
-			// 		ethers.BigNumber.from("1712448000000"), // endTime timestamp
-			// 	]
-			// );
-
-			// // Access the decoded arguments
-			// const owner = decodedArgs.owner;
-			// const createdAt = decodedArgs.createdAt.toNumber();
-			// const voteId = decodedArgs.voteId.toNumber();
-			// const endTime = decodedArgs.endTime.toNumber();
 			const { 0: owner, 1: createdAt, 2: voteId, 3: endTime } = vote.args;
 			console.log("Owner", owner);
 			console.log("contract", contract);
@@ -118,21 +96,11 @@ export const Page = (params: any) => {
 			} catch (e) {
 				console.error(e);
 			}
-			// promises.push(promise);
 		}
 		console.log("New Votes", newVotes);
-		// await Promise.all(promises);
 		setVotes(newVotes);
 	};
 
-	// console.log(params.params.id);
-	// console.log("Type of id ", typeof id);
-	// console.log(id);
-	// const user = await getUserData(id);
-	// const user = null;
-	// if (!user) {
-	// 	return <div>User not found</div>;
-	// }
 	return (
 		<>
 			<Navbar

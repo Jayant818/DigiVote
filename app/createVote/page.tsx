@@ -39,6 +39,32 @@ const CreateVote = () => {
 		}
 	};
 
+	// const handleCreateVote = async (e) => {
+	// 	e.preventDefault();
+
+	// 	// Validate input fields
+	// 	if (!ipfsUrl || !numOptions || !endDate) {
+	// 		alert("Please fill in all required fields.");
+	// 		return;
+	// 	}
+
+	// 	try {
+	// 		const { contract } = await getContract();
+	// 		if (!contract) {
+	// 			throw new Error("Failed to connect to contract. Please try again.");
+	// 		}
+
+	// 		const endDateTime = new Date(endDate).getTime();
+	// 		const data = await contract.createVote(ipfsUrl, numOptions, endDateTime);
+
+	// 		console.log("Vote creation data:", data);
+	// 		alert("Vote Created Successfully");
+	// 	} catch (error) {
+	// 		console.error("Error creating vote:", error);
+	// 		alert("Error Creating Vote: " + error.message);
+	// 	}
+	// };
+
 	const handleCreateVote = async (e) => {
 		e.preventDefault();
 
@@ -54,7 +80,9 @@ const CreateVote = () => {
 				throw new Error("Failed to connect to contract. Please try again.");
 			}
 
+			// Parse the endDate string to get the Unix timestamp in milliseconds
 			const endDateTime = new Date(endDate).getTime();
+
 			const data = await contract.createVote(ipfsUrl, numOptions, endDateTime);
 
 			console.log("Vote creation data:", data);
@@ -99,13 +127,14 @@ const CreateVote = () => {
 							className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 						/>
 					</div>
+
 					<div className="mb-6">
-						<label htmlFor="endDate" className="block font-bold mb-2">
-							End Date:
+						<label htmlFor="endDateTime" className="block font-bold mb-2">
+							End Date and Time:
 						</label>
 						<input
-							type="date"
-							id="endDate"
+							type="datetime-local"
+							id="endDateTime"
 							value={endDate}
 							onChange={(e) => setEndDate(e.target.value)}
 							className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

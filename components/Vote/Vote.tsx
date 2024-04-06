@@ -15,7 +15,7 @@ const Vote = ({ connected, connectCallBack, contract, votes }: VoteParams) => {
 		await contract
 			.vote(id, optionIdx)
 			.then(() => alert("Vote recorded successfully"))
-			.catch((e) => alert(e.message));
+			.catch((e) => alert("Already Voted"));
 	};
 
 	if (!connected) {
@@ -32,17 +32,25 @@ const Vote = ({ connected, connectCallBack, contract, votes }: VoteParams) => {
 		);
 	}
 
+	const isLive = (endTime) => {
+		const date = new Date(endTime);
+		const currentDate = new Date();
+		const diff = date.getTime() - currentDate.getTime();
+		return diff >= 0 ? true : false;
+	};
+
 	const timeLeft = (endTime) => {
 		const date = new Date(endTime);
 		const currentDate = new Date();
 		const diff = date.getTime() - currentDate.getTime();
+		if (diff <= 0) return "Voting Ended";
 
 		const daysLeft = Math.floor(diff / (1000 * 60 * 60 * 24));
 		const hoursLeft = Math.floor(
 			(diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
 		);
 		// return `${daysLeft} days`;
-		return `${daysLeft} days , ${hoursLeft} hours`;
+		return `${daysLeft} days , ${hoursLeft} hours left`;
 	};
 	return (
 		<div>
@@ -59,42 +67,53 @@ const Vote = ({ connected, connectCallBack, contract, votes }: VoteParams) => {
 									className="space-y-4 border-2 border-dashed border-zinc-600400 rounded-md mt-10 p-4 w-[40%] shadow-md shadow-gray-300 hover:shadow-xl hover:shadow-gray-300"
 								>
 									<div className="flex gap-2 items-center">
-										<div className="w-4 h-4 rounded-full bg-green-500 animate-blink"></div>
-										<p className="">Live</p>
+										{isLive(vote.endTime) ? (
+											<>
+												<div className="w-4 h-4 rounded-full bg-green-500 animate-blink"></div>
+												<p className="">Live</p>
+											</>
+										) : (
+											<>
+												<div className="w-4 h-4 rounded-full bg-red-500 animate-blink"></div>
+												<p className="">Ended</p>
+											</>
+										)}
 										<p className="text-red-500 font-semibold">
-											{timeLeft(vote.endTime)} left
+											{timeLeft(vote.endTime)}
 										</p>
 									</div>
 									<h3 className="text-3xl font-bold text-white ">
 										{vote.description}
 									</h3>
-									<p className="space-y-3 mt-4">
-										{vote.options.map((option, idx) => (
-											<div
-												key={Math.random() + idx}
-												className="flex gap-4 w-[90%] justify-between"
-											>
-												<div className="flex gap-4 items-center">
-													{vote.images && (
-														<Image
-															alt={option}
-															src={vote.images[option]}
-															width={50}
-															height={50}
-														/>
-													)}
-													<p className="text-white">{option}</p>
-												</div>
-												<Button
-													onClick={() => {
-														VoteNow(vote.id, idx);
-													}}
+									{isLive(vote.endTime) && (
+										<p className="space-y-3 mt-4">
+											{vote.options.map((option, idx) => (
+												<div
+													key={Math.random() + idx}
+													className="flex gap-4 w-[90%] justify-between"
 												>
-													Vote
-												</Button>
-											</div>
-										))}
-									</p>
+													<div className="flex gap-4 items-center">
+														{vote.images && (
+															<Image
+																alt={option}
+																src={vote.images[option]}
+																width={50}
+																height={50}
+															/>
+														)}
+														<p className="text-white">{option}</p>
+													</div>
+													<Button
+														onClick={() => {
+															VoteNow(vote.id, idx);
+														}}
+													>
+														Vote
+													</Button>
+												</div>
+											))}
+										</p>
+									)}
 								</div>
 							))}
 						</div>
@@ -106,124 +125,3 @@ const Vote = ({ connected, connectCallBack, contract, votes }: VoteParams) => {
 };
 
 export default Vote;
-
-// import React, { useEffect, useState } from "react";
-// import { Button } from "../ui/button";
-
-// interface VoteParams {
-// 	connected: boolean;
-// 	connectCallBack: () => void;
-// 	contract: any;
-// }
-
-// const Vote = ({ connected, connectCallBack, contract }: VoteParams) => {
-// 	const [votes, setvotes] = useState([]);
-//
-// 	const gateway = "https://silver-quiet-sheep-692.mypinata.cloud/";
-// 	useEffect(() => {
-// 		const handleVoteCreated = (owner, createdAt, voteId, endTime) => {
-// 			console.log("VoteCreated event:", owner, createdAt, voteId, endTime);
-// 			// You can add your logic here to update the votes state or fetch the new vote data
-// 		};
-
-// 		if (contract) {
-// 			const filter = contract.filters.VoteCreated();
-// 			contract.on(filter, handleVoteCreated);
-
-// 			// Clean up the event listener when the component unmounts
-// 			return () => {
-// 				contract.off(filter, handleVoteCreated);
-// 			};
-// 		}
-// 	}, [contract]);
-
-// 	const setVoteData = async (votes) => {
-// 		const newvotes = [];
-// 		const promises = [];
-
-// 		for (const vote of votes) {
-// 			const { owner, createdAt, voteId, endTime } = vote.args;
-// 			const voteData = await contract.getVote(voteId);
-// 			const uri = voteData[0];
-// 			if (!uri) return;
-// 			const currentvotes = voteData[2];
-// 			const currentVoteNumbers = currentvotes.map((val) => Number(val));
-// 			const newVote = {
-// 				id: Number(voteId),
-// 				owner: owner,
-// 				createdAt: Number(createdAt),
-// 				endTime: Number(endTime),
-// 				totalvotes: currentVoteNumbers.reduce((sum, value) => sum + value, 0),
-// 				votes: currentVoteNumbers,
-// 			};
-// 			try {
-// 				const data = await fetch(gateway + uri);
-// 				const newData = await data.json();
-// 				newVote.description = newData.description;
-// 				newVote.options = newData.options;
-// 				newvotes.push(newVote);
-// 			} catch (e) {
-// 				console.error(e);
-// 			}
-// 			// promises.push(promise);
-// 		}
-// 		// await Promise.all(promises);
-// 		setvotes(newvotes);
-// 	};
-
-// 	const VoteNow = async (id, optionIdx) => {
-// 		await contract
-// 			.vote(id, optionIdx)
-// 			.then(() => setShowModal(true))
-// 			.catch((e) => alert(e.message));
-// 	};
-
-// 	if (!connected) {
-// 		return (
-// 			<div className="text-3xl">
-// 				Connect To{" "}
-// 				<span
-// 					className="text-blue-700 cursor-pointer"
-// 					onClick={connectCallBack}
-// 				>
-// 					MetaMask
-// 				</span>
-// 			</div>
-// 		);
-// 	}
-// 	return (
-// 		<div className="container mx-auto px-4">
-// 			{votes && (
-// 				<>
-// 					<h3 className="text-2xl font-bold mb-4">{votes[0].description}</h3>
-// 					<div className="grid grid-cols-1 gap-4">
-// 						{votes[0].options.map((option, idx) => (
-// 							<div
-// 								key={Math.random() + idx}
-// 								className="bg-white rounded-lg shadow p-4"
-// 							>
-// 								<p className="text-lg mb-2">
-// 									{option} - {votes[0].votes[idx]}
-// 								</p>
-// 								<Button
-// 									onClick={() => {
-// 										VoteNow(votes[0].id, idx);
-// 									}}
-// 									className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-// 								>
-// 									Vote
-// 								</Button>
-// 							</div>
-// 						))}
-// 					</div>
-// 				</>
-// 			)}
-// 			<Modal show={showModal} onClose={() => setShowModal(false)}>
-// 				<h3 className="text-xl font-bold mb-4">Success</h3>
-// 				<p>Your vote has been recorded successfully.</p>
-// 			</Modal>
-// 		</div>
-// 	);
-// };
-
-// export default Vote;
