@@ -31,6 +31,19 @@ const Vote = ({ connected, connectCallBack, contract, votes }: VoteParams) => {
 			</div>
 		);
 	}
+
+	const timeLeft = (endTime) => {
+		const date = new Date(endTime);
+		const currentDate = new Date();
+		const diff = date.getTime() - currentDate.getTime();
+
+		const daysLeft = Math.floor(diff / (1000 * 60 * 60 * 24));
+		const hoursLeft = Math.floor(
+			(diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+		);
+		// return `${daysLeft} days`;
+		return `${daysLeft} days , ${hoursLeft} hours`;
+	};
 	return (
 		<div>
 			{connected && (
@@ -39,9 +52,19 @@ const Vote = ({ connected, connectCallBack, contract, votes }: VoteParams) => {
 					{votes.length === 0 ? (
 						<h3>No votes available</h3>
 					) : (
-						<div className=" flex  flex-col px-10  py-10 gap-4  border-2 rounded-md mt-10 ">
+						<div className=" flex   px-10   gap-10  mb-10 ">
 							{votes.map((vote, idx) => (
-								<div key={Math.random() + idx} className="space-y-4">
+								<div
+									key={Math.random() + idx}
+									className="space-y-4 border-2 border-dashed border-zinc-600400 rounded-md mt-10 p-4 w-[40%] shadow-md shadow-gray-300 hover:shadow-xl hover:shadow-gray-300"
+								>
+									<div className="flex gap-2 items-center">
+										<div className="w-4 h-4 rounded-full bg-green-500 animate-blink"></div>
+										<p className="">Live</p>
+										<p className="text-red-500 font-semibold">
+											{timeLeft(vote.endTime)} left
+										</p>
+									</div>
 									<h3 className="text-3xl font-bold text-white ">
 										{vote.description}
 									</h3>
@@ -49,7 +72,7 @@ const Vote = ({ connected, connectCallBack, contract, votes }: VoteParams) => {
 										{vote.options.map((option, idx) => (
 											<div
 												key={Math.random() + idx}
-												className="flex gap-4 w-[40%] justify-between"
+												className="flex gap-4 w-[90%] justify-between"
 											>
 												<div className="flex gap-4 items-center">
 													{vote.images && (

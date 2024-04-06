@@ -24,7 +24,7 @@ export default function RootLayout({
 					defer
 				></script>
 			</head>
-			<body className={inter.className}>{children}</body>
+			<body className="w-full min-h-screen">{children}</body>
 		</html>
 	);
 }

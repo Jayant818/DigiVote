@@ -7,6 +7,11 @@ const nextConfig = {
 				hostname: "encrypted-tbn0.gstatic.com",
 				port: "",
 			},
+			{
+				protocol: "https",
+				hostname: "upload.wikimedia.org",
+				port: "",
+			},
 		],
 	},
 };
