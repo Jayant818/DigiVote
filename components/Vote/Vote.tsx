@@ -11,23 +11,49 @@ interface VoteParams {
 }
 
 const Vote = ({ connected, connectCallBack, contract, votes }: VoteParams) => {
+	const [loading, setLoading] = useState(false);
 	const VoteNow = async (id, optionIdx) => {
 		await contract
 			.vote(id, optionIdx)
 			.then(() => alert("Vote recorded successfully"))
 			.catch((e) => alert("Already Voted"));
 	};
+	const handleClick = async () => {
+		setLoading(true);
+		await connectCallBack();
+		setLoading(false);
+	};
 
-	if (!connected) {
+	if (!connected && !loading) {
 		return (
 			<div className="text-3xl">
 				Connect To{" "}
-				<span
-					className="text-blue-700 cursor-pointer"
-					onClick={connectCallBack}
-				>
+				<span className="text-blue-700 cursor-pointer" onClick={handleClick}>
 					MetaMask
 				</span>
+			</div>
+		);
+	}
+
+	if (loading) {
+		return (
+			<div className="flex justify-center items-center mt-20">
+				<div id="wifi-loader">
+					<svg className="circle-outer" viewBox="0 0 86 86">
+						<circle className="back" cx="43" cy="43" r="40"></circle>
+						<circle className="front" cx="43" cy="43" r="40"></circle>
+						<circle className="new" cx="43" cy="43" r="40"></circle>
+					</svg>
+					<svg className="circle-middle" viewBox="0 0 60 60">
+						<circle className="back" cx="30" cy="30" r="27"></circle>
+						<circle className="front" cx="30" cy="30" r="27"></circle>
+					</svg>
+					<svg className="circle-inner" viewBox="0 0 34 34">
+						<circle className="back" cx="17" cy="17" r="14"></circle>
+						<circle className="front" cx="17" cy="17" r="14"></circle>
+					</svg>
+					<div className="text" data-text="Searching"></div>
+				</div>
 			</div>
 		);
 	}
@@ -60,7 +86,7 @@ const Vote = ({ connected, connectCallBack, contract, votes }: VoteParams) => {
 					{votes.length === 0 ? (
 						<h3>No votes available</h3>
 					) : (
-						<div className=" flex   px-10   gap-10  mb-10 ">
+						<div className=" flex flex-wrap  px-10   gap-10  mb-10 ">
 							{votes.map((vote, idx) => (
 								<div
 									key={Math.random() + idx}
