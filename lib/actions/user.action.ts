@@ -55,7 +55,7 @@ export async function getUserData(VoterId: string) {
 			voterId: VoterId,
 		});
 		if (user) {
-			return user;
+			return JSON.parse(JSON.stringify(user));
 		}
 
 		return false;

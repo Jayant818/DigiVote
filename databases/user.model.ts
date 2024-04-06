@@ -30,8 +30,12 @@ const UserSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	hasVoted: {
-		type: Boolean,
+	PM_Election: {
+		type: Object,
+		default: false,
+	},
+	CM_Election: {
+		type: Object,
 		default: false,
 	},
 });

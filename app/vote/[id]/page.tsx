@@ -17,10 +17,11 @@ declare global {
 
 //@ts-ignore
 
-export const Page = (params: any) => {
+export const Page = ({ params }: any) => {
 	const [contract, setContract] = useState(null);
 	const [isConnected, setIsConnected] = useState(false);
-	const id = params.params.id;
+	const [user, setUser] = useState(null);
+	console.log(params.id);
 	const [votes, setVotes] = useState([]);
 
 	useEffect(() => {
@@ -34,6 +35,10 @@ export const Page = (params: any) => {
 				setIsConnected(false);
 			}
 		}
+		getUserData(params.id).then((data) => {
+			setUser(data);
+			console.log("User", data);
+		});
 	}, []);
 
 	const gateway = "https://silver-quiet-sheep-692.mypinata.cloud/";
