@@ -6,7 +6,9 @@ export interface IUser extends Document {
 	mobileNo: string;
 	img: string;
 	voterId: number;
-	hasVoted: boolean;
+	voted: {
+		[key: string]: boolean;
+	};
 }
 
 const UserSchema = new Schema({
@@ -22,6 +24,10 @@ const UserSchema = new Schema({
 		type: String,
 		required: true,
 	},
+	state: {
+		type: String,
+		required: true,
+	},
 	img: {
 		type: String,
 		required: true,
@@ -30,13 +36,15 @@ const UserSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	PM_Election: {
+	voted: {
 		type: Object,
-		default: false,
-	},
-	CM_Election: {
-		type: Object,
-		default: false,
+		default: {
+			// Set default vote names with false values
+			"PM Election": false,
+			"CM Election": false,
+
+			// Add more if needed
+		},
 	},
 });
 

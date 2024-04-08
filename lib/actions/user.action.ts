@@ -63,3 +63,26 @@ export async function getUserData(VoterId: string) {
 		return console.log("Error aa gaya bhai 😔 ", err);
 	}
 }
+export async function updateUser(VoterId: string, name: string) {
+	try {
+		connectToDB();
+
+		console.log("Name", name);
+
+		const updatedUser = await User.findOneAndUpdate(
+			{ voterId: VoterId },
+			{ $set: { [`voted.${name}`]: true } }, // Use square brackets to access object property dynamically
+			{ new: true } // Return the updated document
+		);
+		console.log("Inside", updatedUser);
+
+		// If user is found and updated
+		if (updatedUser) {
+			return JSON.parse(JSON.stringify(updatedUser)); // Return updated user
+		}
+
+		return false;
+	} catch (err) {
+		return console.log("Error aa gaya bhai 😔 ", err);
+	}
+}

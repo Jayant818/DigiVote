@@ -1,13 +1,14 @@
 "use client";
 import Navbar from "@/components/shared/Navbar";
 import { Button } from "@/components/ui/button";
-import { getUserData } from "@/lib/actions/user.action";
+import { getUserData, updateUser } from "@/lib/actions/user.action";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import { ethers } from "ethers";
 import { abi, address, getContract } from "@/components/shared/contract";
 import Vote from "@/components/Vote/Vote";
+import { User } from "lucide-react";
 
 declare global {
 	interface Window {
@@ -97,6 +98,8 @@ export const Page = ({ params }: any) => {
 				newVote.description = newData.description;
 				newVote.options = newData.options;
 				newVote.images = newData.images;
+				newVote.state = newData.state;
+				newVote.name = newData.name;
 				newVotes.push(newVote);
 			} catch (e) {
 				console.error(e);
@@ -104,6 +107,20 @@ export const Page = ({ params }: any) => {
 		}
 		console.log("New Votes", newVotes);
 		setVotes(newVotes);
+	};
+
+	const VoteNow = async (id, optionIdx, name) => {
+		try {
+			console.log(user);
+			await contract?.vote(id, optionIdx);
+			alert("Vote recorded successfully");
+			// Additional code after successful vote recording can go here
+			const newUser = await updateUser(user.voterId, name);
+			console.log("updated User", newUser);
+			setUser(newUser);
+		} catch (e) {
+			alert("Already Voted");
+		}
 	};
 
 	return (
@@ -118,6 +135,8 @@ export const Page = ({ params }: any) => {
 				connectCallBack={connectCallBack}
 				contract={contract}
 				votes={votes}
+				userData={user}
+				VoteNow={VoteNow}
 			/>
 		</>
 	);
