@@ -46,7 +46,7 @@ let phoneNumberGlobal = "";
 const Login = (props) => {
 	const [name, setName] = useState("");
 	const [Aadhar, setaadhar] = useState("");
-	const [otp, setOtp] = useState(12345678);
+	const [otp, setOtp] = useState<Number>(123456789);
 	const [flag, setFlag] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [generatedOtp, setGeneratedOtp] = useState(1);
@@ -106,7 +106,8 @@ const Login = (props) => {
 			console.log(User.mobileNo);
 			const num = `+91${User.mobileNo}`;
 			await sendVerificationCode(num);
-			capture();
+			const capturedImage = capture();
+			console.log("captured Image", capturedImage);
 			console.log("Called");
 			setLoading(true);
 			// await sendSMS(otp);
@@ -234,9 +235,9 @@ const Login = (props) => {
 										// height={600}
 										ref={webcamRef}
 										screenshotFormat="image/webp"
-										minScreenshotHeight={600}
-										minScreenshotWidth={600}
-										screenshotQuality={1}
+										minScreenshotHeight={200}
+										minScreenshotWidth={200}
+										screenshotQuality={0.5}
 										// width={600}
 										videoConstraints={videoConstraints}
 									/>

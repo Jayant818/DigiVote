@@ -1,5 +1,6 @@
 "use client";
 import { connectCallBack } from "@/lib/utils";
+import Image from "next/image";
 import React, { useState } from "react";
 
 const GetResult = () => {
@@ -72,24 +73,28 @@ const GetResult = () => {
 	}
 
 	return (
-		<div>
-			<h3>Get Your Result</h3>
-			<form className="border-2 border-dashed border-zinc-700">
-				<input
-					type="text"
-					placeholder="Enter Your Election Name"
-					className="px-4 py-2"
-					onChange={(e) => setElectionName(e.target.value)}
-				/>
-				<input
-					type="text"
-					placeholder="Enter Your Address"
-					className="px-4 py-2"
-					onChange={(e) => setAddress(e.target.value)}
-				/>
+		<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+			<h3 className="text-2xl font-bold mb-6 text-gray-800">Get Your Result</h3>
+			<form className="bg-white rounded-lg shadow-md p-6 w-full max-w-md">
+				<div className="mb-4">
+					<input
+						type="text"
+						placeholder="Enter Your Election Name"
+						className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+						onChange={(e) => setElectionName(e.target.value)}
+					/>
+				</div>
+				<div className="mb-6">
+					<input
+						type="text"
+						placeholder="Enter Your Address"
+						className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+						onChange={(e) => setAddress(e.target.value)}
+					/>
+				</div>
 				<button
 					type="submit"
-					className="px-4 py-2 bg-blue-700 text-white"
+					className="w-full py-2 px-4 bg-indigo-600 text-white font-bold rounded-md hover:bg-indigo-700 transition-colors duration-300"
 					onClick={handleSubmit}
 				>
 					Submit
@@ -118,10 +123,39 @@ const GetResult = () => {
 				) : (
 					<>
 						{!Result ? (
-							<h3>No Result Available</h3>
+							<h3 className="text-lg text-gray-600 mt-10">
+								No Result Available
+							</h3>
 						) : (
-							<div>
-								<h3>{JSON.stringify(Result[0].Votes)}</h3>
+							<div className="w-full flex justify-center items-center">
+								<div className="space-y-4 border-2 border-dashed border-gray-400 rounded-md mt-10 p-4  shadow-md hover:shadow-lg transition-shadow duration-300">
+									<div className="flex gap-2 items-center text-gray-500">
+										Results of {Result[0].description}
+									</div>
+									<h3 className="text-3xl font-bold text-gray-800">
+										{Result[0].description}
+									</h3>
+									<p className="space-y-3 mt-4">
+										{Result[0].options.map((option, idx) => (
+											<div
+												key={Math.random() + idx}
+												className="flex gap-4 w-[90%] justify-between items-center"
+											>
+												<div className="flex gap-2 items-center">
+													{Result[0].images && (
+														<img
+															src={Result[0].images[option]}
+															alt={option}
+															className="w-8 h-8 rounded-full"
+														/>
+													)}
+													<p className="text-gray-800">{option}</p>
+												</div>
+												<p className="text-gray-800">{Result[0].Votes[idx]}</p>
+											</div>
+										))}
+									</p>
+								</div>
 							</div>
 						)}
 					</>

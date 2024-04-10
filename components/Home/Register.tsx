@@ -23,6 +23,7 @@ const Register = () => {
 	const [aadhar, setAadhar] = useState("");
 	const [number, setNumber] = useState("");
 	const [voterId, setVoterId] = useState("");
+	const [state, setState] = useState("");
 
 	const videoConstraints = {
 		width: 1280,
@@ -49,6 +50,11 @@ const Register = () => {
 			mobileNo: number,
 			img: plainImg,
 			voterId: voterId,
+			state: state,
+			voted: {
+				"PM Election": false,
+				"CM Election": false,
+			},
 			hasVoted: false,
 		};
 		console.log("Data", data);
@@ -99,6 +105,14 @@ const Register = () => {
 								id="number"
 								className="col-span-3"
 								onChange={(e) => setNumber(e.target.value)}
+							/>
+						</div>
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="number">State</Label>
+							<Input
+								id="textr"
+								className="col-span-3"
+								onChange={(e) => setState(e.target.value)}
 							/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
