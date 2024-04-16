@@ -124,7 +124,7 @@ export const Page = ({ params }: any) => {
 	};
 
 	return (
-		<>
+		<div className="pt-4">
 			<Navbar
 				isValidUser={true}
 				connect={connectCallBack}
@@ -138,7 +138,7 @@ export const Page = ({ params }: any) => {
 				userData={user}
 				VoteNow={VoteNow}
 			/>
-		</>
+		</div>
 	);
 };
 

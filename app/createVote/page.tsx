@@ -31,39 +31,12 @@ const CreateVote = () => {
 
 	const connectCallBack = async () => {
 		const { contract, signer } = await getContract();
-
 		setContract(contract);
 		if (contract) {
 			console.log("Contract", contract);
 			setIsConnected(true);
 		}
 	};
-
-	// const handleCreateVote = async (e) => {
-	// 	e.preventDefault();
-
-	// 	// Validate input fields
-	// 	if (!ipfsUrl || !numOptions || !endDate) {
-	// 		alert("Please fill in all required fields.");
-	// 		return;
-	// 	}
-
-	// 	try {
-	// 		const { contract } = await getContract();
-	// 		if (!contract) {
-	// 			throw new Error("Failed to connect to contract. Please try again.");
-	// 		}
-
-	// 		const endDateTime = new Date(endDate).getTime();
-	// 		const data = await contract.createVote(ipfsUrl, numOptions, endDateTime);
-
-	// 		console.log("Vote creation data:", data);
-	// 		alert("Vote Created Successfully");
-	// 	} catch (error) {
-	// 		console.error("Error creating vote:", error);
-	// 		alert("Error Creating Vote: " + error.message);
-	// 	}
-	// };
 
 	const handleCreateVote = async (e) => {
 		e.preventDefault();
@@ -82,9 +55,7 @@ const CreateVote = () => {
 
 			// Parse the endDate string to get the Unix timestamp in milliseconds
 			const endDateTime = new Date(endDate).getTime();
-
 			const data = await contract.createVote(ipfsUrl, numOptions, endDateTime);
-
 			console.log("Vote creation data:", data);
 			alert("Vote Created Successfully");
 		} catch (error) {
@@ -94,17 +65,15 @@ const CreateVote = () => {
 	};
 
 	return (
-		<div>
-			<Navbar
-				isValidUser={true}
-				connect={connectCallBack}
-				connected={isConnected}
-			/>
-			<div className="max-w-md mx-auto p-6 bg-gray-100 rounded-lg shadow-md">
-				<h2 className="text-2xl font-bold mb-6 text-center">Create Vote</h2>
-				<form>
+		<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+			<div className="max-w-md w-full px-4 py-8 bg-white shadow-lg rounded-lg">
+				<h1 className="text-2xl font-bold mb-6 text-center">Create Vote</h1>
+				<form onSubmit={handleCreateVote}>
 					<div className="mb-4">
-						<label htmlFor="ipfsUrl" className="block font-bold mb-2">
+						<label
+							htmlFor="ipfsUrl"
+							className="block text-gray-700 font-bold mb-2"
+						>
 							IPFS URL:
 						</label>
 						<input
@@ -116,7 +85,10 @@ const CreateVote = () => {
 						/>
 					</div>
 					<div className="mb-4">
-						<label htmlFor="numOptions" className="block font-bold mb-2">
+						<label
+							htmlFor="numOptions"
+							className="block text-gray-700 font-bold mb-2"
+						>
 							Number of Options:
 						</label>
 						<input
@@ -127,21 +99,23 @@ const CreateVote = () => {
 							className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 						/>
 					</div>
-
 					<div className="mb-6">
-						<label htmlFor="endDateTime" className="block font-bold mb-2">
+						<label
+							htmlFor="endDate"
+							className="block text-gray-700 font-bold mb-2"
+						>
 							End Date and Time:
 						</label>
 						<input
 							type="datetime-local"
-							id="endDateTime"
+							id="endDate"
 							value={endDate}
 							onChange={(e) => setEndDate(e.target.value)}
 							className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 						/>
 					</div>
 					<button
-						onClick={handleCreateVote}
+						type="submit"
 						className="w-full py-2 px-4 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600 transition-colors duration-300"
 					>
 						Create Vote

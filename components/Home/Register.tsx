@@ -26,8 +26,8 @@ const Register = () => {
 	const [state, setState] = useState("");
 
 	const videoConstraints = {
-		width: 1280,
-		height: 720,
+		width: 4096,
+		height: 4096,
 		facingMode: "user",
 	};
 	const webcamRef = React.useRef(null);
@@ -40,7 +40,7 @@ const Register = () => {
 	}, [webcamRef]);
 
 	const handleSubmit = async (e) => {
-		e.preventDefault();
+		// e.preventDefault();
 		const imageSrc = await capture();
 		console.log("Submitted");
 		const plainImg = imageSrc.split(",")[1];
@@ -65,7 +65,8 @@ const Register = () => {
 		<div>
 			<Dialog>
 				<DialogTrigger asChild>
-					<Button variant="outline">Register</Button>
+					<div>Register</div>
+					{/* <Button variant="outline">Register</Button> */}
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>
@@ -121,10 +122,10 @@ const Register = () => {
 								audio={false}
 								// height={600}
 								ref={webcamRef}
-								screenshotFormat="image/webp"
+								screenshotFormat="image/jpeg"
 								minScreenshotHeight={200}
 								minScreenshotWidth={200}
-								screenshotQuality={0.5}
+								screenshotQuality={1}
 								// width={600}
 								videoConstraints={videoConstraints}
 							/>

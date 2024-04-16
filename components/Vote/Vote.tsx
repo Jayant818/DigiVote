@@ -44,11 +44,22 @@ const Vote = ({
 
 	if (!connected && !loading) {
 		return (
-			<div className="text-3xl">
-				Connect To{" "}
-				<span className="text-blue-700 cursor-pointer" onClick={handleClick}>
-					MetaMask
-				</span>
+			<div className="relative">
+				<div className="h-screen w-full overflow-hidden  dark:bg-black bg-neutral-100  dark:bg-dot-neutral/[0.2] bg-dot-black/[0.2] relative flex items-center justify-center">
+					{/* Radial gradient for the container to give a faded look */}
+					<div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-neutral-100 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+					<p
+						className="text-4xl sm:text-7xl font-bold relative z-20 bg-clip-text text-stone-900  py-8 "
+						onClick={handleClick}
+					>
+						Connect To{" "}
+						<span className="text-blue-700 cursor-pointer">MetaMask</span>
+					</p>
+				</div>
+				<div className="absolute top-8 flex justify-center w-screen"></div>
+				<div className="flex items-center justify-center absolute top-0 bottom-16 left-[150px]">
+					<Image src="/bgImg.jpeg" alt="bgimg" width={1100} height={1100} />
+				</div>
 			</div>
 		);
 	}
@@ -131,7 +142,7 @@ const Vote = ({
 													{timeLeft(vote.endTime)}
 												</p>
 											</div>
-											<h3 className="text-3xl font-bold text-white ">
+											<h3 className="text-3xl font-bold text-black ">
 												{vote.description}
 											</h3>
 											{isLive(vote.endTime) && (

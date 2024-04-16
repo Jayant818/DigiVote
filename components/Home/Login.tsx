@@ -27,6 +27,7 @@ import {
 	RecaptchaVerifier,
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
+import axios from "axios";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyC3WVjIjqTkqludVa5IW5MzfuDzoVrE4jY",
@@ -106,15 +107,91 @@ const Login = (props) => {
 			console.log(User.mobileNo);
 			const num = `+91${User.mobileNo}`;
 			await sendVerificationCode(num);
-			const capturedImage = capture();
-			console.log("captured Image", capturedImage);
-			console.log("Called");
-			setLoading(true);
-			// await sendSMS(otp);
-			setTimeout(() => {
-				setFlag(true);
-				setLoading(false);
-			}, 5000);
+			// await capture();
+			const imageSrc = webcamRef.current.getScreenshot();
+
+			// console.log("Captured Image ye hai Bhai", imageSrc);
+			setImgSrc(imageSrc);
+			// console.log("Actual Image", User.img);
+			// console.log("captured Image", imageSrc);
+			// const options = {
+			// 	method: "POST",
+			// 	url: "https://facematch.p.rapidapi.com/API/verify/Facematch",
+			// 	headers: {
+			// 		"content-type": "application/json",
+			// 		"X-RapidAPI-Key":
+			// 			"d14d6be33fmshae6baa1d759740fp1b664bjsn2133b6b1e1f0",
+			// 		"X-RapidAPI-Host": "facematch.p.rapidapi.com",
+			// 	},
+			// 	data: {
+			// 		method: "facevalidate",
+			// 		txn_id: "test-f23a-4bed-88fa-270befab4407",
+			// 		clientid: "222",
+			//
+			// 	},
+			// };
+
+			// const options = {
+			// 	method: "POST",
+			// 	url: "https://facematch.p.rapidapi.com/API/verify/Facematch",
+			// 	headers: {
+			// 		"content-type": "application/json",
+			// 		"X-RapidAPI-Key":
+			// 			"d7560e273bmshb91db88de90ff2ap187f05jsnb18364a151ab",
+			// 		"X-RapidAPI-Host": "facematch.p.rapidapi.com",
+			// 	},
+			// 	data: {
+			// 		method: "facevalidate",
+			// 		txn_id: "test-f23a-4bed-88fa-270befab4407",
+			// 		clientid: "222",
+			// 		image_base64_1: imageSrc,
+			// 		image_base64_2: `data:image/jpeg;base64,${User.img}`,
+			// 	},
+			// };
+
+			const options = {
+				method: "POST",
+				url: "https://facematch.p.rapidapi.com/API/verify/Facematch",
+				headers: {
+					"content-type": "application/json",
+					"X-RapidAPI-Key":
+						"2801000646mshbaae309dfcb005bp180bfajsn79798a14329a",
+					"X-RapidAPI-Host": "facematch.p.rapidapi.com",
+				},
+				data: {
+					method: "facevalidate",
+					txn_id: "test-f23a-4bed-88fa-270befab4407",
+					clientid: "222",
+					image_base64_1: imageSrc,
+					image_base64_2: `data:image/jpeg;base64,${User.img}`,
+				},
+			};
+
+			try {
+				const response = await axios.request(options);
+				console.log(response.data);
+				console.log("Called");
+				if (parseInt(response.data.Succeeded.data.confidence) > 70) {
+					setLoading(true);
+					// await sendSMS(otp);
+					// await sendVerificationCode(num);
+					setTimeout(() => {
+						setFlag(true);
+						setLoading(false);
+					}, 5000);
+				} else {
+					throw new Error("Image doesn't match");
+				}
+			} catch (error) {
+				alert(error);
+				setIsValidUser(false);
+			}
+
+			// const areSame = await VerifyImages(
+			// 	imgSrc,
+			// 	`data:image/webp;base64,${User.img}`
+			// );
+			// console.log("are same person", areSame);
 		} else {
 			setIsValidUser(false);
 		}
@@ -155,8 +232,8 @@ const Login = (props) => {
 	};
 
 	const videoConstraints = {
-		width: 1280,
-		height: 720,
+		width: 4096,
+		height: 4096,
 		facingMode: "user",
 	};
 
@@ -164,15 +241,16 @@ const Login = (props) => {
 	const capture = React.useCallback(() => {
 		console.log("capturing");
 		const imageSrc = webcamRef.current.getScreenshot();
+
+		console.log("Captured Image ye hai Bhai", imageSrc);
 		setImgSrc(imageSrc);
-		console.log(imageSrc);
 	}, [webcamRef]);
 
 	return (
 		<div>
 			<Dialog>
 				<DialogTrigger asChild>
-					<Button variant="outline">LogIN</Button>
+					<div>Login</div>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
 					{flag ? (
@@ -234,10 +312,10 @@ const Login = (props) => {
 										audio={false}
 										// height={600}
 										ref={webcamRef}
-										screenshotFormat="image/webp"
+										screenshotFormat="image/jpeg"
 										minScreenshotHeight={200}
 										minScreenshotWidth={200}
-										screenshotQuality={0.5}
+										screenshotQuality={1}
 										// width={600}
 										videoConstraints={videoConstraints}
 									/>
