@@ -8,7 +8,7 @@ import { MetaMaskInpageProvider } from "@metamask/providers";
 import { ethers } from "ethers";
 import { abi, address, getContract } from "@/components/shared/contract";
 import Vote from "@/components/Vote/Vote";
-import { User } from "lucide-react";
+// import { User } from "lucide-react";
 
 declare global {
 	interface Window {

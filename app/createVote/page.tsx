@@ -67,7 +67,7 @@ const CreateVote = () => {
 	return (
 		<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
 			<div className="max-w-md w-full px-4 py-8 bg-white shadow-lg rounded-lg">
-				<h1 className="text-2xl font-bold mb-6 text-center">Create Vote</h1>
+				<h1 className="text-2xl font-bold mb-6 text-center">Create Election</h1>
 				<form onSubmit={handleCreateVote}>
 					<div className="mb-4">
 						<label

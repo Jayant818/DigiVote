@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SendHorizontal } from "lucide-react";
+import { SendHorizontal, User } from "lucide-react";
 import { Loader2 } from "lucide-react";
 
 import { sendSMS } from "@/lib/actions/send.actions";
@@ -60,7 +60,6 @@ const Login = (props) => {
 	const recaptchaContainerRef = useRef(null);
 
 	async function sendVerificationCode(phoneNumber) {
-		console.log("Bhai BHia");
 		console.log(recaptchaContainerRef.current);
 
 		const recaptchaVerifier = new RecaptchaVerifier(
@@ -79,7 +78,7 @@ const Login = (props) => {
 			.then((confirmationResult) => {
 				setGeneratedOtp(otp);
 				window.confirmationResult = confirmationResult;
-				console.log("OTP sent");
+				console.log("OTP sent", otp);
 			})
 			.catch((error) => {
 				console.log("Error aa gaya bhai ", error);
@@ -171,7 +170,7 @@ const Login = (props) => {
 				const response = await axios.request(options);
 				console.log(response.data);
 				console.log("Called");
-				if (parseInt(response.data.Succeeded.data.confidence) > 70) {
+				if (parseInt(response.data.Succeeded.data.confidence) > 60) {
 					setLoading(true);
 					// await sendSMS(otp);
 					// await sendVerificationCode(num);
@@ -204,8 +203,10 @@ const Login = (props) => {
 	const ResendOtp = async () => {
 		// otp phir se send karo
 		setLoading(true);
-		const otp = Math.floor(100000 + Math.random() * 900000);
-		setGeneratedOtp(otp);
+		const num = `+91${User.mobileNo}`;
+		await sendVerificationCode(num);
+		// const otp = Math.floor(100000 + Math.random() * 900000);
+		// setGeneratedOtp(otp);
 		// await sendSMS(otp);
 		setTimeout(() => {
 			setLoading(false);
@@ -213,7 +214,7 @@ const Login = (props) => {
 	};
 
 	const handleLogin = () => {
-		console.log(otp);
+		console.log("Entered opt is ", otp);
 		window.confirmationResult
 			.confirm(otp)
 			.then((result) => {
